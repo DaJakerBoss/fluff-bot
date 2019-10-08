@@ -35,7 +35,7 @@ client.on("message", async message => {
         message.channel.send("done!");
         });
     } else {
-        commands.run(client, message, config);      // the world's shitties command handler :)
+        commands.run(client, message, config);      // the world's shittiest command handler :)
     }
     
 })
