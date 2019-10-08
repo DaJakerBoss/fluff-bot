@@ -19,7 +19,7 @@ client.on("ready", () => {
 client.on("message", async message => {
     if(message.author.bot) return;                  // do not interact with a bot
 
-    if(message.content.includes(config.prefix + " reload")){
+    if(message.content.includes(config.prefix + " reload")){    // currently broken
         delete require.cache[require.resolve(`./commands.js`)]; // delete cached command file
         const { exec } = require('child_process');
         exec('git pull', (err, stdout, stderr) => {
@@ -30,11 +30,12 @@ client.on("message", async message => {
         /* printing stdout and stderr */
         console.log(`stdout: ${stdout}`);
         console.log(`stderr: ${stderr}`);
+        /* for some reason the reload just... breaks. need to figure out why */
         const commands = require("./commands.js");
         message.channel.send("done!");
         });
     } else {
-        commands.run(client, message, config);
+        commands.run(client, message, config);      // the world's shitties command handler :)
     }
     
 })
