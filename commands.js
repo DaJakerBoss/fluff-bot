@@ -44,6 +44,7 @@ exports.run = (client, message, config) => {
                             message.channel.send(arguments.join(" "));
             case "sayin":   console.log("speaking remotely");
                             client.channels.find('id', arguments.shift()).send(arguments.join(" "));
+            case "test":    message.channel.send("it fucking worked!");
         }
     } 
 }
