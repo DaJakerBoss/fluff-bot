@@ -20,7 +20,7 @@ client.on("message", async message => {
     if(message.author.bot) return;                  // do not interact with a bot
 
     if(message.content.includes(config.prefix + " reload")){    // look for the reload command explicitly
-        delete require.cache[require.resolve(`./commands.js`)]; // delete cached command file
+        delete require.cache[require.resolve('./commands.js')]; // delete cached command file
         /* execute shell command */
         const { exec } = require('child_process');
         exec('git pull', (err, stdout, stderr) => {             // run git pull

@@ -47,8 +47,9 @@ exports.run = (client, message, config) => {
                             break;
             case "sayin":   console.log("speaking remotely");
                             client.channels.find('id', arguments.shift()).send(arguments.join(" "));
+                            message.channel.send("zoop");
                             break;
-            case "test":    message.channel.send("it fucking doesn't work yet >:(");
+            case "test2":    message.channel.send("it fucking doesn't work yet >:(");
                             break;
             case "sleep":   message.channel.send("goodnight!");
                             setTimeout(() => {process.exit(0);}, 1000);
