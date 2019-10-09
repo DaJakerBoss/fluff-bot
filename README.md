@@ -10,6 +10,10 @@ this bot exists for me to learn node.js with. that's pretty much it.
 `returnid` - returns id of the current channel<br>
 `say` - repeats a user's message<br>
 `sayin` - repeats a user's message in a specified channel<br>
+`shutup` - disables the automatic replies<br>
+`speak` - undos `shutup`<br>
+`reload` - pulls changes from GitHub and reloads the commands file on the fly<br>
+`test` - useless, was used for testing `reload` but could come in handy
 
 ## Notes
 this bot does not include a token or a prefix, but by default I use `jake,` as a prefix.<br>
