@@ -8,7 +8,6 @@ enjoy
 const   Discord = require("discord.js"),            // Discord API
         client  = new Discord.Client(),              // Set Client
         config  = require("./config.json"),          // contains "path" and "token"
-        commands= require("./commands.js"),        // (hopefully) include command file
         fs      = require('fs');                   // fs for server settings readout
 
 /* console feedback for bot ready */
@@ -23,7 +22,7 @@ client.on("message", async message => {
 
     if(message.content.includes(config.prefix + " reload")){    // look for the reload command explicitly
         delete require.cache[require.resolve('./commands.js')]; // delete cached command file
-        /* execute shell command */
+
         const { exec } = require('child_process');
         exec('git pull', (err, stdout, stderr) => {             // run git pull
             if (err) {                                          // in the event of a github fuck
@@ -31,13 +30,13 @@ client.on("message", async message => {
             return;
         }
         /* printing stdout and stderr from terminal */
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
-        /* for some reason the reload just... breaks. need to figure out why */
-        const commands = require("./commands.js");
+        console.log(`output: ${stdout} \n ${stderr}`);
+
+        let commands = require("./commands.js");        // re-load commands
         message.channel.send("done!");
         });
     } else {
+        let commands = require("./commands.js");        // require command file on run
         commands.run(client, message, config, fs);      // the world's shittiest command handler :)
     }
     

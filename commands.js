@@ -62,7 +62,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                             message.channel.send("zoop");
                             break;
 
-            case "test2":   message.channel.send("it fucking doesn't work yet >:(");                        // this will mean something, eventually
+            case "test":    message.channel.send("it fucking doesn't work yet >:(");                        // this will mean something, eventually
                             break;
 
             case "sleep":   message.channel.send("goodnight!");
