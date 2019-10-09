@@ -31,6 +31,7 @@ client.on("message", async message => {
         }
         /* printing stdout and stderr from terminal */
         console.log(`output: ${stdout} \n ${stderr}`);
+        message.channel.send(`\`\`\`git Output: \n${stdout} \ngit Error (untested): \n${stderr}\`\`\``)
 
         let commands = require("./commands.js");        // re-load commands
         message.channel.send("done!");
