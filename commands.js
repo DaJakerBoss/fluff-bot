@@ -5,6 +5,8 @@ exports.run = (client, message, config) => {
             if(message.channel.id == "600109451348934666") {                                                // ensure dank meme channel
             console.log("permission to kill granted");
             message.channel.send("Begone degenerate!");
+        }else {
+            message.channel.send("DEGENERATE DETECTED");
         }
     }
 
