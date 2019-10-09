@@ -6,9 +6,11 @@ enjoy
 */
 
 const   Discord = require("discord.js"),            // Discord API
-        client = new Discord.Client(),              // Set Client
-        config = require("./config.json");          // contains "path" and "token"
-        commands = require("./commands.js");        // (hopefully) include command file
+        client  = new Discord.Client(),              // Set Client
+        config  = require("./config.json"),          // contains "path" and "token"
+        commands= require("./commands.js"),        // (hopefully) include command file
+        fs      = require('fs');                   // fs for server settings readout
+
 /* console feedback for bot ready */
 client.on("ready", () => {
     console.log("Bot is up");
@@ -17,7 +19,7 @@ client.on("ready", () => {
 
 /* actions on message */
 client.on("message", async message => {
-    if(message.author.bot) return;                  // do not interact with a bot
+    if(message.author.bot) return;                              // do not interact with a bot
 
     if(message.content.includes(config.prefix + " reload")){    // look for the reload command explicitly
         delete require.cache[require.resolve('./commands.js')]; // delete cached command file
@@ -36,7 +38,7 @@ client.on("message", async message => {
         message.channel.send("done!");
         });
     } else {
-        commands.run(client, message, config);      // the world's shittiest command handler :)
+        commands.run(client, message, config, fs);      // the world's shittiest command handler :)
     }
     
 })
