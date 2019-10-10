@@ -69,17 +69,30 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                             setTimeout(() => {process.exit(0);}, 1000);                                     // waits to exit so it doesn't asynchroniously kill itself before it talks
                             break;
 
-            case "shutup":  settings[message.guild.id].shutup = true;                                       // change value of shutup
-                            message.channel.send("okok I will")
-                            fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
-                            console.log("successfully changed file value");
+            case "shutup":  if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                                message.channel.send("you don't have the permission to do that >:|");
+                            } else {
+                                settings[message.guild.id].shutup = true;                                       // change value of shutup
+                                message.channel.send("okok I will")
+                                fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+                                console.log("successfully changed file value");
+                            }
                             break;
 
-            case "speak":   settings[message.guild.id].shutup = false;                                      // change value of shutup
+            case "speak":   if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                                message.channel.send("you don't have the permission to do that >:|");
+                            } else {
+                            settings[message.guild.id].shutup = false;                                      // change value of shutup
                             message.channel.send("I'm back!")
                             fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
                             console.log("successfully changed file value");
+                            }
                             break;
+
+            case "setrole": settings[message.guild.id].minrole = arguments
+                            fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+                            console.log("successfully changed file value");
+                            message.channel.send("set minimum role");
 
         }
     } 
