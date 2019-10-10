@@ -16,8 +16,15 @@ this bot exists for me to learn node.js with. that's pretty much it.
 `test` - useless, was used for testing `reload` but could come in handy
 
 ## Notes
-this bot does not include a token or a prefix, but by default I use `jake,` as a prefix.<br>
-when you make your config.ini, be sure to include a token field with your bot token, and a prefix field with your prefix
+this bot does not include a token or a prefix, but by default I use `fluff,` as a prefix.<br>
+Here's the format of the `config.json`<br>
+```
+{
+    "token" : "tokentokentokentoken"
+    "prefix" : "prefix"
+    "admin" : "ID of user running the bot"
+}
+```
 
 ## Special Thanks
 @LoeDoesCode for helping me understand what the fuck JavaScript was doing.<br>

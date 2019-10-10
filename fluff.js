@@ -44,7 +44,7 @@ client.on("message", async message => {
             fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
             console.log("successfully added server");
         }
-        commands.run(client, message, config, fs);      // the world's shittiest command handler :)
+        commands.run(client, message, config, fs, Discord);      // the world's shittiest command handler :)
     }
     
 })
