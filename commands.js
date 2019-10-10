@@ -28,71 +28,103 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
 
         /* command switch, prettier until I modularize */
         switch(command){
-            case "help":    message.channel.send("```\n"+                                                   // sends disgusting-ass message
-                            "HELP MENU\n"+
-                            "*********\n"+
-                            "\n"+
-                            "Bot Usage:\n"+
-                            "hello :: returns a friendly message\n"+
-                            "returnid :: returns guild ID\n"+
-                            "say :: repeat a message\n"+
-                            "sayin :: send a message to a specified channel by ID\n"+
-                            "sleep :: kill the bot\n"+
-                            "shutup :: silences the automatic message replies\n"+
-                            "speak :: reverses shutup\n"+
-                            "reload :: pulls changes from git and reloads commands [WIP]\n"+
-                            "\n"+
-                            "there's two other triggers that you'll find without difficulty.\n"+
-                            "have fun\n"+
-                            "```");
-                            break;
+            case "help":    
+                message.channel.send("```\n"+                                                   // sends disgusting-ass message
+                "HELP MENU\n"+
+                "*********\n"+
+                "\n"+
+                "Bot Usage:\n"+
+                "hello :: returns a friendly message\n"+
+                "returnid :: returns guild ID\n"+
+                "say :: repeat a message\n"+
+                "sayin :: send a message to a specified channel by ID\n"+
+                "sleep :: kill the bot\n"+
+                "shutup :: silences the automatic message replies\n"+
+                "speak :: reverses shutup\n"+
+                "reload :: pulls changes from git and reloads commands [WIP]\n"+
+                "\n"+
+                "there's two other triggers that you'll find without difficulty.\n"+
+                "have fun\n"+
+                "```");
+                break;
 
-            case "hello":   message.channel.send("Hello bitch!");                                           // self-explanatory
-                            break;
+            case "hello":   
+                message.channel.send("Hello bitch!");                                           // self-explanatory
+                break;
 
-            case "returnid":message.channel.send(message.guild.id);                                         // currently returns guildid
-                            break;
+            case "returnid":
+                message.channel.send(message.guild.id);                                         // currently returns guildid
+                break;
 
-            case "say":     console.log("speaking a message");
-                            message.channel.send(arguments.join(" "));                                      // joins message and sends
-                            break;
+            case "say":     
+                console.log("speaking a message");
+                message.channel.send(arguments.join(" "));                                      // joins message and sends
+                break;
 
-            case "sayin":   console.log("speaking remotely");
-                            client.channels.find('id', arguments.shift()).send(arguments.join(" "));        // shift returns channel id, then sends joined message
-                            message.channel.send("zoop");
-                            break;
+            case "sayin":   
+                console.log("speaking remotely");
+                client.channels.find('id', arguments.shift()).send(arguments.join(" "));        // shift returns channel id, then sends joined message
+                message.channel.send("zoop");
+                break;
 
-            case "test":    message.channel.send("you bet your ass it fucking works!");                     // this will mean something, eventually
-                            break;
+            case "test":    
+                message.channel.send("you bet your ass it fucking works!");                     // this will mean something, eventually
+                break;
 
-            case "sleep":   message.channel.send("goodnight!");
-                            setTimeout(() => {process.exit(0);}, 1000);                                     // waits to exit so it doesn't asynchroniously kill itself before it talks
-                            break;
+            case "sleep":  
+                message.channel.send("goodnight!");
+                setTimeout(() => {process.exit(0);}, 1000);                                     // waits to exit so it doesn't asynchroniously kill itself before it talks
+                break;
 
-            case "shutup":  if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
-                                message.channel.send("you don't have the permission to do that >:|");
-                            } else {
-                                settings[message.guild.id].shutup = true;                                       // change value of shutup
-                                message.channel.send("okok I will")
-                                fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
-                                console.log("successfully changed file value");
-                            }
-                            break;
+            case "shutup":  
+                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                    message.channel.send("you don't have the permission to do that >:|");
+                } else {
+                    settings[message.guild.id].shutup = true;                                       // change value of shutup
+                    message.channel.send("okok I will")
+                    fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+                    console.log("successfully changed file value");
+                }
+                break;
 
-            case "speak":   if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
-                                message.channel.send("you don't have the permission to do that >:|");
-                            } else {
-                            settings[message.guild.id].shutup = false;                                      // change value of shutup
-                            message.channel.send("I'm back!")
-                            fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
-                            console.log("successfully changed file value");
-                            }
-                            break;
+            case "speak":   
+                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                 message.channel.send("you don't have the permission to do that >:|");
+                } else {
+                    settings[message.guild.id].shutup = false;                                      // change value of shutup
+                    message.channel.send("I'm back!")
+                    fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+                    console.log("successfully changed file value");
+                }
+                break;
 
-            case "setrole": settings[message.guild.id].minrole = arguments
-                            fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
-                            console.log("successfully changed file value");
-                            message.channel.send("set minimum role");
+            case "setperm": 
+                settings[message.guild.id].minrole = arguments
+                fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+                console.log("successfully changed file value");
+                message.channel.send("set minimum role");
+            
+            case "setannounce":
+                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                    message.channel.send("you don't have the permission to do that >:|");
+                } else {
+                    settings[message.guild.id].announcerole = arguments.shift();
+                    settings[message.guild.id].announcechannel = arguments;
+                    fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+                    console.log("successfully changed file value");
+                    message.channel.send("set announcement role (hopefully) for ID and channel");
+                }
+
+            case "announce":
+                if(!settings[message.guild.id].announcerole || !settings[message.guild.id].announcechannel){
+                    message.channel.send("You have not set up announcements!");
+                }
+                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                    message.channel.send("you don't have the permission to do that >:|");
+                } else {
+                    client.channels.get(`${settings[message.guild.id].announcechannel}`).send(`<@${settings[message.guild.id].announcerole}>: ` + arguments.join(" "));
+                }
+                message.channel.send("should have done?!");
 
         }
     } 
