@@ -38,6 +38,12 @@ client.on("message", async message => {
         });
     } else {
         let commands = require("./commands.js");        // require command file on run
+        let settings = JSON.parse(fs.readFileSync("./serversettings.json"));
+        if(!settings[message.guild.id]){
+            settings[message.guild.id] = {};
+            fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
+            console.log("successfully added server");
+        }
         commands.run(client, message, config, fs);      // the world's shittiest command handler :)
     }
     

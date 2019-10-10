@@ -58,7 +58,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                             break;
 
             case "sayin":   console.log("speaking remotely");
-                            client.channels[arguments.shift()].send(arguments.join(" "));                   // shift returns channel id, then sends joined message
+                            client.channels.find('id', arguments.shift()).send(arguments.join(" "));        // shift returns channel id, then sends joined message
                             message.channel.send("zoop");
                             break;
 
