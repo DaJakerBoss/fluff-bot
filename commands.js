@@ -103,6 +103,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));   // write out changes
                 console.log("successfully changed file value");
                 message.channel.send("set minimum role");
+                break;
             
             case "setannounce":
                 if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
@@ -114,6 +115,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     console.log("successfully changed file value");
                     message.channel.send("set announcement role (hopefully) for ID and channel");
                 }
+                break;
 
             case "announce":
                 if(!settings[message.guild.id].announcerole || !settings[message.guild.id].announcechannel){
@@ -122,9 +124,10 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
                     message.channel.send("you don't have the permission to do that >:|");
                 } else {
-                    client.channels.get(`${settings[message.guild.id].announcechannel}`).send(`<@${settings[message.guild.id].announcerole}>: ` + arguments.join(" "));
+                    client.channels.get(`${settings[message.guild.id].announcechannel}`).send(`<@&${settings[message.guild.id].announcerole}>: ` + arguments.join(" "));
                 }
                 message.channel.send("should have done?!");
+                break;
 
         }
     } 
