@@ -124,10 +124,11 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
                     message.channel.send("you don't have the permission to do that >:|");
                 } else {
-                    message.guild.updateRole[`${settings[message.guild.id].announcerole}`, {mentionable : true}];
+                    let role = message.guild.roles.find("id", `${settings[message.guild.id].announcerole}`);
+                    role.edit({mentionable : true});
                     client.channels.get(`${settings[message.guild.id].announcechannel}`).send(`<@&${settings[message.guild.id].announcerole}>: ` + arguments.join(" "));
-                    message.guild.updateRole[`${settings[message.guild.id].announcerole}`, {mentionable : false}];
-                    message.channel.send("should have done?!");
+                    setTimeout(() => {role.edit({mentionable : false})}, 1000);
+                    message.channel.send("should have sent!");
                 }
 
                 break;
