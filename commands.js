@@ -1,7 +1,7 @@
 exports.run = (client, message, config, fs, Discord) => {
 let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load settings 
 
-    /* OwO and UwU catch for Dank Meme Channel */
+    /* OwO and UwU catch, globally*/
     if(message.content.toLowerCase().includes("uwu") || message.content.toLowerCase().includes("owo")) {    // look for owo/uwu
         if (settings[message.guild.id].shutup){                                                             // check for shut
             return;
@@ -43,7 +43,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .addField('Permission-based Commands:',
                     "`sleep` :: kill the bot [admin only]\n"+
                     "`reload` :: pulls changes from git and reloads commands\n"+
-                    "`announce` :: pings a set announcement role in a set channel, then makes it unmentionable")
+                    "`announce` :: pings a given role in a given channel, then makes it unmentionable\n"+
+                    "`edit` :: edits a bot announcement, I get it, we all make typos")
                     .addField('Configuration Commands',
                     "`setperm` :: sets the minimum required role to use permission-based and configuration commands\n"+
                     "`shutup` :: silences the automatic message replies\n"+
@@ -57,7 +58,11 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     "*Do not use the brackets, they are for reference*\n"+
                     "`sayin #channel {message}`\n"+
                     "`setperm {role name [EXACT]}`\n"+
-                    "`announce {role name[EXACT]} #channel {message}`")
+                    "`announce {role name[EXACT]} #channel {message}`\n"+
+                    "`edit {ID of announcement message} #channel-of-announcement {new edited message}`")
+                    .addField('Github',
+                    "all source can be found here, along with examples of bot usage\n"+
+                    "https://github.com/DaJakerBoss/fluff-bot")
                     .setFooter("by OhThat'sJake#7049, somehow", 'https://cdn.discordapp.com/avatars/554171524316135437/a0e6cbdb1aa561e1b42794797f80f405.png');
                 message.channel.send(helpEmbed);
                 break;
@@ -189,7 +194,6 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .addField("Channel", client.channels.get(`${channelID}`).name + "\n" + "ID: " + channelID)
                     .addField("Message", arguments.join(" "))
                     .setFooter(`Command issued by ${message.member.nickname}`, client.user.avatarURL);
-                message.channel.send("sent!");
                 message.channel.send(announceEmbed);
                 break;
             
