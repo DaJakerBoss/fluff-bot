@@ -20,7 +20,7 @@ this bot exists for me to learn node.js with. that's pretty much it.
 `setperm` - sets minimum required role to use permission-restricted commands<br>
 `eval` - executes javascript code and returns any output to the channel where the command was issued
 
-# Command Notes
+## Command Notes
 The following commands are permission-restricted:
 - `announce`<br>
 - `edit`<br>
@@ -32,8 +32,9 @@ The following commands are locked to the Admin ID:
 - `reload`<br>
 - `eval`<br>
 
-The following commands require specific syntax (assume no brackets):
-`announcement`:<br>
+### The following commands require specific syntax (assume no brackets):<br>
+- **`announcement`**:<br>
+Specific Syntax:<br>
 `{prefix} announce {role name (case sensitive)} #{channel} {message}`<br>
 Example:
 ```
@@ -45,7 +46,8 @@ Returns:
 @test role: this is an announcement!
 ```
 
-`edit`:<br>
+ - **`edit`**:<br>
+Specific Syntax: <br>
 `{prefix} edit {announcement ID} #{announcement channel} {new message}`<br>
 Example:
 ```
@@ -58,17 +60,17 @@ Returns:
 @test role: edited message! (edited)
 ```
 
-`sayin`:<br>
-`{prefix} sayin #{channel} message`
+- **`sayin`**:<br>
+`{prefix} sayin #{channel} message`<br>
 Example:
 ```
 fluff, sayin #general hello all!
 ```
-Returns:
-![Example Return](https://i.imgur.com/ZqLrNNO.png)
+Returns:<br>
+![Example Return](https://i.imgur.com/ZqLrNNO.png)<br>
 *Please note, the Rich Embed will send to the specified channel, and will insert the user icon and nickname in the footer*
 
-`setperm`:<br>
+- **`setperm`**:<br>
 `{prefix} setperm {role name (case sensitive)}`<br>
 Example:
 ```
@@ -78,10 +80,10 @@ Returns:<br>
 `minimum role set`
 
 The following commands return a Rich Embed to the channel where the command was issued:<br>
-- `announce`
+- `announce`<br>
 ![Example Announcement Return](https://i.imgur.com/7GelZyc.png)
-- `edit`
-![Example Announcement Edit Return](https://i.imgur.com/2Ix8d70.png)
+- `edit`<br>
+![Example Announcement Edit Return](https://i.imgur.com/2Ix8d70.png)<br>
 ## Notes
 this bot does not include a token or a prefix, but by default I use `fluff,` as a prefix.<br>
 Here's the format of the `config.json`<br>
