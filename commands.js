@@ -46,7 +46,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     "`announce` :: pings a set announcement role in a set channel, then makes it unmentionable\n\n")
                     .addField('Configuration Commands',
                     "`setperm` :: sets the minimum required permission to use permission-based and configuration commands\n"+
-                    "`setannounce` :: sets the announcement role and channel, then makes it unpingable\n"+
+                    "`setannounce` :: sets the announcement role and channel, then makes it unpingable **!DEPRECATED!**\n"+
                     "`shutup` :: silences the automatic message replies\n"+
                     "`speak` :: reverses shutup")
                     .addField('Automatic Message Replies',
@@ -56,9 +56,9 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     "I'm not gonna say what they do, figure out for yourself")
                     .addField('Syntax',
                     "*Do not use the brackets, they are for reference*\n"+
-                    "`sayin {channel ID} {message}`\n"+
+                    "`sayin #channel {message}`\n"+
                     "`setperm {roleID}`\n"+
-                    "`setannounce @role #channel`")
+                    "`announce {role name} #channel {message}`")
                     .setFooter("by OhThat'sJake#7049, somehow", 'https://cdn.discordapp.com/avatars/554171524316135437/a0e6cbdb1aa561e1b42794797f80f405.png');
                 message.channel.send(helpEmbed);
                 break;
@@ -124,35 +124,34 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 console.log("successfully changed file value");
                 message.channel.send("set minimum role");
                 break;
-            
-            case "setannounce":
-                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){                     // check if user has specified minimum role
-                    message.channel.send("you don't have the permission to do that >:|");
-                } else {
-                    settings[message.guild.id].announcerole = message.mentions.roles.first().id;            // sets for first mentioned role, should be the only role by syntax
-                    settings[message.guild.id].announcechannel = arguments[1].replace(/[\\<>@#&!]/g, "");   // grabs channel from a #channel mention by removing all special characters
-                    message.mentions.roles.first().edit({mentionable : false});                             // makes sure the role is no longer pingable
-                    fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));           // write out changes
-                    console.log("successfully changed file value");
-                    message.channel.send("set announcement role and channel, role is now unpingable");
-                }
-                break;
 
             case "announce":
-                if(!settings[message.guild.id].announcerole || !settings[message.guild.id].announcechannel){// checks beforehand to ensure the proper fields are set
-                    message.channel.send("You have not set up announcements!");
-                }
-                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){                     // check if user has specified minimum role
-                    message.channel.send("you don't have the permission to do that >:|");
-                } else {
-                    let role = message.guild.roles.find("id", `${settings[message.guild.id].announcerole}`);// grabs role by previously set ID
-                    role.edit({mentionable : true});                                                        // sets to mentionable
+                let roleName = arguments.shift()
+                let selectRole = message.guild.roles.find(({name}) => name == roleName);           // find role
+                let channelID = arguments.shift().replace(/[\\<>@#&!]/g, "")                                // second arg is channel ID
 
-                    /* in this godforsaken line, it navigates to the specified channel, joins the arguments, and sends them, while pinging the specified role */
-                    client.channels.get(`${settings[message.guild.id].announcechannel}`).send(`<@&${settings[message.guild.id].announcerole}>: ` + arguments.join(" "));
-                    setTimeout(() => {role.edit({mentionable : false})}, 1000);                             // sets role to not be mentionable
-                    message.channel.send("should have sent!");
+                
+                if (!selectRole){
+                    message.channel.send("error finding role");
+                    console.log(selectRole);
+                    break;
                 }
+
+                try {
+                    selectRole.edit({mentionable : true});                                                  // ping pong
+                } catch(err) {
+                    message.channel.send("failed to change role permissions");
+                    console.log("err");
+                    break;
+                }
+
+                try{
+                    client.channels.get(`${channelID}`).send(selectRole + ": " + arguments.join(" "));      // send message
+                } catch(err) {
+                    message.channel.send("failed to send the message!");
+                }
+                setTimeout(() => {selectRole.edit({mentionable : false})}, 500);                           // fuck ping pong
+                message.channel.send("whelp yeet");
                 break;
 
             default:
