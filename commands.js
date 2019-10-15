@@ -45,8 +45,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     "`reload` :: pulls changes from git and reloads commands\n"+
                     "`announce` :: pings a set announcement role in a set channel, then makes it unmentionable\n\n")
                     .addField('Configuration Commands',
-                    "`setperm` :: sets the minimum required permission to use permission-based and configuration commands\n"+
-                    "`setannounce` :: sets the announcement role and channel, then makes it unpingable **!DEPRECATED!**\n"+
+                    "`setperm` :: sets the minimum required role to use permission-based and configuration commands\n"+
                     "`shutup` :: silences the automatic message replies\n"+
                     "`speak` :: reverses shutup")
                     .addField('Automatic Message Replies',
@@ -57,8 +56,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .addField('Syntax',
                     "*Do not use the brackets, they are for reference*\n"+
                     "`sayin #channel {message}`\n"+
-                    "`setperm {roleID}`\n"+
-                    "`announce {role name} #channel {message}`")
+                    "`setperm {role name [EXACT]}`\n"+
+                    "`announce {role name[EXACT]} #channel {message}`")
                     .setFooter("by OhThat'sJake#7049, somehow", 'https://cdn.discordapp.com/avatars/554171524316135437/a0e6cbdb1aa561e1b42794797f80f405.png');
                 message.channel.send(helpEmbed);
                 break;
@@ -76,9 +75,17 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 message.channel.send(arguments.join(" "));                                      // joins message and sends
                 break;
 
-            case "sayin":   
+            case "sayin":
+                message.delete;
                 console.log("speaking remotely");
-                client.channels.find('id', arguments.shift()).send(arguments.join(" "));        // shift returns channel id, then sends joined message
+                // client.channels.find('id', arguments.shift()).send(arguments.join(" "));        // shift returns channel id, then sends joined message
+                const remoteChannel = client.channels.find('id', arguments.shift().replace(/[\\<>@#&!]/g, ""));
+                const remoteMessage = new Discord.RichEmbed()
+                    .setColor('#3BCD30')
+                    .setAuthor(`📤 From user: ${message.member.nickname}`)
+                    .setTitle(arguments.join(" "));
+                    //.setDescription(arguments.join());
+                remoteChannel.send(remoteMessage);
                 message.channel.send("zoop");
                 break;
 
@@ -87,7 +94,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "sleep":
-                if(message.member.id == config.admin){                                           // checks for my hard-coded ID
+                if(message.member.id == config.admin){                                          // checks for my hard-coded ID
                     message.channel.send("goodnight!");
                     setTimeout(() => {process.exit(0);}, 1000);                                 // waits to exit so it doesn't asynchroniously kill itself before it talks
                 } else {
@@ -118,40 +125,63 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 }
                 break;
 
-            case "setperm": 
-                settings[message.guild.id].minrole = arguments                                      // automatically grabs role since that's the only argument. sketchy, yes, I'm aware
+            case "setperm":
+                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                    message.channel.send("You don't have the permission to do that! >:(")
+                    break;
+                }
+                try {
+                    settings[message.guild.id].minrole = message.guild.roles.find(({name}) => name == arguments.join(" ")).id;    // automatically grabs role since that's the only argument. sketchy, yes, I'm aware
+                } catch(err) {
+                    message.channel.send("invalid role name!")
+                    break;
+                }
+
                 fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));       // write out changes
                 console.log("successfully changed file value");
                 message.channel.send("set minimum role");
                 break;
 
             case "announce":
-                let roleName = arguments.shift()
-                let selectRole = message.guild.roles.find(({name}) => name == roleName);           // find role
-                let channelID = arguments.shift().replace(/[\\<>@#&!]/g, "")                                // second arg is channel ID
-
-                
-                if (!selectRole){
-                    message.channel.send("error finding role");
-                    console.log(selectRole);
+                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                    message.channel.send("You don't have the permission to do that! >:(")
                     break;
                 }
+                let roleName = arguments.shift()
+                let selectRole = message.guild.roles.find(({name}) => name == roleName);            // find role
+                
+                while(!selectRole){
+                    roleName = roleName + " " + arguments.shift()
+                    selectRole = message.guild.roles.find(({name}) => name == roleName);
+                    if(arguments.length == 0){
+                        message.channel.send("role not found!");
+                        return;
+                    }
+                }
+
+                let channelID = arguments.shift().replace(/[\\<>@#&!]/g, "")                        // second arg is channel ID
 
                 try {
-                    selectRole.edit({mentionable : true});                                                  // ping pong
+                    selectRole.edit({mentionable : true});                                          // ping pong
                 } catch(err) {
-                    message.channel.send("failed to change role permissions");
+                    message.channel.send("Failed to change role permissions!");
                     console.log("err");
                     break;
                 }
 
-                try{
-                    client.channels.get(`${channelID}`).send(selectRole + ": " + arguments.join(" "));      // send message
-                } catch(err) {
-                    message.channel.send("failed to send the message!");
+                if (!client.channels.get(`${channelID}`)){
+                    message.channel.send("Channel not found! Are permissions set?")
+                } else {
+                    try{
+                        client.channels.get(`${channelID}`).send(selectRole + ": " + arguments.join(" "));      // send message
+                    } catch(err) {
+                        message.channel.send("failed to send the message!");
+                        break;
+                    } 
                 }
-                setTimeout(() => {selectRole.edit({mentionable : false})}, 500);                           // fuck ping pong
-                message.channel.send("whelp yeet");
+                
+                setTimeout(() => {selectRole.edit({mentionable : false})}, 500);                    // fuck ping pong
+                message.channel.send("sent!");
                 break;
 
             default:
