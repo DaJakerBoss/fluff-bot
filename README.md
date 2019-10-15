@@ -33,40 +33,40 @@ The following commands are locked to the Admin ID:
 - `eval`<br>
 
 ### The following commands require specific syntax (assume no brackets):<br>
-- **`announcement`**:<br>
- - Specific Syntax:<br>
- - `{prefix} announce {role name (case sensitive)} #{channel} {message}`<br>
- - Example:<br>
- - `fluff, announce test role #announcements this is an announcement!`<br>
- - Returns:<br>
- - `[in specified channel, #announcements]`<br>
-   `@test role: this is an announcement!`
+* **`announcement`**:<br>
+    - Specific Syntax:<br>
+    - `{prefix} announce {role name (case sensitive)} #{channel} {message}`<br>
+    - Example:<br>
+    - `fluff, announce test role #announcements this is an announcement!`<br>
+    - Returns:<br>
+    - `[in specified channel, #announcements]`<br>
+        `@test role: this is an announcement!`
 
-- **`edit`**:<br>
- - Specific Syntax: <br>
- - `{prefix} edit {announcement ID} #{announcement channel} {new message}`<br>
- - Example:
- - `[on the announcement above]`
- - `fluff, edit 123456789012345678 #annoucements edited message!`
- - Returns:<br>
- - `[in specified channel, #announcements]`
-   `@test role: edited message! (edited)`
+* **`edit`**:<br>
+    - Specific Syntax: <br>
+    - `{prefix} edit {announcement ID} #{announcement channel} {new message}`<br>
+    - Example:
+    - `[on the announcement above]`
+    - `fluff, edit 123456789012345678 #annoucements edited message!`
+    - Returns:<br>
+    - `[in specified channel, #announcements]`
+        `@test role: edited message! (edited)`
 
 
-- **`sayin`**:<br>
- - `{prefix} sayin #{channel} message`<br>
- - Example:
- - `fluff, sayin #general hello all!`
- - Returns:<br>
-   ![Example Return](https://i.imgur.com/ZqLrNNO.png)<br>
- - *please note, the Rich Embed will send to the specified channel, and will feature the command issuer's icon alongisde nickname*
+* **`sayin`**:<br>
+    - `{prefix} sayin #{channel} message`<br>
+    - Example:
+    - `fluff, sayin #general hello all!`
+    - Returns:<br>
+    ![Example Return](https://i.imgur.com/ZqLrNNO.png)<br>
+    - *please note, the Rich Embed will send to the specified channel, and will feature the command issuer's icon alongisde nickname*
 
-- **`setperm`**:<br>
- - `{prefix} setperm {role name (case sensitive)}`<br>
- - Example:<br>
- - `fluff, setperm test role`<br>
- - Returns:<br>
- - `minimum role set`
+* **`setperm`**:<br>
+    - `{prefix} setperm {role name (case sensitive)}`<br>
+    - Example:<br>
+    - `fluff, setperm test role`<br>
+    - Returns:<br>
+    - `minimum role set`
 
 The following commands return a Rich Embed to the channel where the command was issued:<br>
 - `announce`<br>
