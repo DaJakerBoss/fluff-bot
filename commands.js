@@ -181,7 +181,16 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 }
                 
                 setTimeout(() => {selectRole.edit({mentionable : false})}, 500);                    // fuck ping pong
+                let announceEmbed = new Discord.RichEmbed()
+                    .setAuthor('fluff bot!')
+                    .setColor('#3BCD30')
+                    .setTitle("Announcement Sent!")
+                    .addField("Role", `${roleName}`)
+                    .addField("Channel", client.channels.get(`${channelID}`).name + "\n" + "ID: " + channelID)
+                    .addField("Message", arguments.join(" "))
+                    .setFooter(`Command issued by ${message.member.nickname}`, client.user.avatarURL);
                 message.channel.send("sent!");
+                message.channel.send(announceEmbed);
                 break;
             
             case "eval":
@@ -193,6 +202,39 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     message.channel.send(`\`\`\`${evalReturn}\`\`\``);
                     break;
                 }
+            case "edit":
+                let announceMessageID = arguments.shift();
+                let announceChannelID = arguments.shift().replace(/[\\<>@#&!]/g, "");
+
+                if(!message.guild.channels.get(`${announceChannelID}`)){
+                    message.channel.send("channel not found!");
+                }
+                if (!message.guild.channels.get(`${announceChannelID}`).fetchMessages({around: announceMessageID, limit: 1})){
+                    message.channel.send("Can't find the message!")
+                }
+                let originalMessage = message.guild.channels.get(`${announceChannelID}`).fetchMessages({around: announceMessageID, limit: 1}).content
+                try{
+                    message.guild.channels.get(`${announceChannelID}`).fetchMessages({around: announceMessageID, limit: 1})
+                        .then(search => {
+                            const editMessage = search.first();
+                            if(!editMessage.mentions.roles.first()){
+                                message.channel.send("No role pinged... is this an announcement?")
+                                message.channel.send(editMessage.mentions.roles.first())
+                                return;
+                            }
+                            editMessage.edit(`${editMessage.mentions.roles.first()}: ` + arguments.join(" "));
+                        });
+                } catch(err) {
+                    message.channel.send("Can't edit that message! Do I have permissions?")
+                }
+                const editEmbed = new Discord.RichEmbed()
+                    .setAuthor('fluff bot!')
+                    .setColor('#3BCD30')
+                    .setTitle('Edited Announcement')
+                    .addField('Original', originalMessage)
+                    .addField('Edit', arguments.join(" "))
+                    .setFooter(`Command issued by ${message.member.nickname}`, client.user.avatarURL);
+                break;
 
             default:
                 message.channel.send("do what now?");
