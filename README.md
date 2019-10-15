@@ -49,7 +49,7 @@ The following commands are locked to the Admin ID:
     - `[on the announcement above]`
     - `fluff, edit 123456789012345678 #annoucements edited message!`
     - Returns:<br>
-    - `[in specified channel, #announcements]`
+    - `[in specified channel, #announcements]`<br>
         `@test role: edited message! (edited)`
 
 
