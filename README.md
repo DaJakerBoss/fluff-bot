@@ -96,3 +96,5 @@ Here's the format of the `config.json`<br>
 * Autodelete certain commands and their calls. [WIP]<br>
 * ~~Make a role pingable, send a message that pings the role, then undo changes.~~ Completed!<br>
 * Make commands that allow for user input across multiple messages.
+
+![js](https://i.imgur.com/YCtqEek.png)
