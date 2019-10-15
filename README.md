@@ -12,7 +12,7 @@ this bot exists for me to learn node.js with. that's pretty much it.
 `sayin` - repeats a user's message in a specified channel<br>
 `sleep` - kills bot (admin only command)
 `shutup` - disables the automatic replies<br>
-`speak` - undos `shutup`<br>
+`speak` - undoes `shutup`<br>
 `reload` - pulls changes from GitHub and reloads the commands file on the fly<br>
 `test` - useless, was used for testing `reload` but could come in handy<br>
 `announce` - pings a given role in a given channel, then immediately makes it unmentionable<br>
@@ -85,9 +85,10 @@ Here's the format of the `config.json`<br>
 ```
 
 ## Special Thanks
-@LoeDoesCode for helping me understand what the fuck JavaScript was doing.<br>
-@eslachance for the [example bot](https://gist.github.com/eslachance/3349734a98d30011bb202f47342601d3) which helped shape the bot and get ideas.<br>
-@cyber_sec_0 for helping with JavaScript formatting
+[Loe Does Code](https://github.com/LoeDoesCode) for helping me understand what the fuck JavaScript was doing.<br>
+[Aurora's Palace](https://github.com/AurorasPalace) for helping me fix the edit command<br>
+[eslachance](https://github.com/eslachance) for the [example bot](https://gist.github.com/eslachance/3349734a98d30011bb202f47342601d3) which helped shape the bot and get ideas.<br>
+[@cyber_sec_0](https://twitter.com/cyber_sec_0) for helping with JavaScript formatting
 
 ## Planned Changes
 * ~~Let `sayin` use a normal channel link with something like `jake, sayin #general`~~ Completed!<br>
