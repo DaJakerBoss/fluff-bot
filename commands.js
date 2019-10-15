@@ -36,14 +36,14 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .setDescription(`prefix: \`${config.prefix}\``)
                     .setThumbnail('https://cdn.discordapp.com/avatars/630909646579695628/984f9b9a3becb50087387b7b1c187104.png?')
                     .addField('Global Commands:', 
-                    "`hello` :: returns a friendly message\n"+
+                    "`hello` :: returns a friendly identification\n"+
                     "`returnid` :: returns guild ID\n"+
                     "`say` :: repeat a message\n"+
-                    "`sayin` :: send a message to a specified channel by ID")
+                    "`sayin` :: send a message to a specified channel by mention")
                     .addField('Permission-based Commands:',
-                    "`sleep` :: kill the bot\n"+
+                    "`sleep` :: kill the bot [admin only]\n"+
                     "`reload` :: pulls changes from git and reloads commands\n"+
-                    "`announce` :: pings a set announcement role in a set channel, then makes it unmentionable\n\n")
+                    "`announce` :: pings a set announcement role in a set channel, then makes it unmentionable")
                     .addField('Configuration Commands',
                     "`setperm` :: sets the minimum required role to use permission-based and configuration commands\n"+
                     "`shutup` :: silences the automatic message replies\n"+
@@ -63,7 +63,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "hello":   
-                message.channel.send("Hello bitch!");                                           // self-explanatory
+                message.channel.send("Hi I'm Fluff Bot! The android sent by CyberLife!");                                           // self-explanatory
                 break;
 
             case "returnid":
@@ -76,15 +76,15 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "sayin":
-                message.delete;
+                message.delete();
                 console.log("speaking remotely");
-                // client.channels.find('id', arguments.shift()).send(arguments.join(" "));        // shift returns channel id, then sends joined message
                 const remoteChannel = client.channels.find('id', arguments.shift().replace(/[\\<>@#&!]/g, ""));
                 const remoteMessage = new Discord.RichEmbed()
                     .setColor('#3BCD30')
-                    .setAuthor(`📤 From user: ${message.member.nickname}`)
-                    .setTitle(arguments.join(" "));
-                    //.setDescription(arguments.join());
+                    .setAuthor(`📤 incoming transmission!`)
+                    .setTitle(arguments.join(" "))
+                    .setFooter(`from ${message.member.nickname}`, message.author.avatarURL);
+
                 remoteChannel.send(remoteMessage);
                 message.channel.send("zoop");
                 break;
@@ -183,6 +183,16 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 setTimeout(() => {selectRole.edit({mentionable : false})}, 500);                    // fuck ping pong
                 message.channel.send("sent!");
                 break;
+            
+            case "eval":
+                if(config.admin !== message.author.id){
+                    message.channel.send("__**ABSOFUCKINGLUTELY NOT**__")
+                    break;
+                } else {
+                    let evalReturn = eval(arguments.join(" "));
+                    message.channel.send(`\`\`\`${evalReturn}\`\`\``);
+                    break;
+                }
 
             default:
                 message.channel.send("do what now?");
