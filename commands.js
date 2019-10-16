@@ -10,6 +10,17 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
         }
     }
 
+    /*well, some servers just don't have setperm set yet, let's fix*/
+    function vibeCheck(){
+        if (settings[message.guild.id].minrole == null){
+            message.channel.send("The role for command permissions has not been set!")
+            return "failed";
+        } else if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){             // check if user has specified minimum role
+            message.channel.send("you don't have the permission to do that >:|");
+            return "failed";
+        }
+    }
+
     /* awoo catch, globally */
     if(message.content.toLowerCase().includes("awoo")){
         if(settings[message.guild.id].shutup){                                                              // check for shut
@@ -81,7 +92,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "sayin":
-                message.delete();
+                message.channel.send("this command is currently disabled, check back soon!;")
+                /* message.delete();
                 console.log("speaking remotely");
                 const remoteChannel = client.channels.find('id', arguments.shift().replace(/[\\<>@#&!]/g, ""));
                 const remoteMessage = new Discord.RichEmbed()
@@ -91,8 +103,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .setFooter(`from ${message.member.nickname}`, message.author.avatarURL);
 
                 remoteChannel.send(remoteMessage);
-                message.channel.send("zoop");
-                break;
+                message.channel.send("zoop"); */
+                break; 
 
             case "test":    
                 message.channel.send("you bet your ass it fucking works!");                     // this will mean something, eventually
@@ -109,8 +121,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "shutup":  
-                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){             // check if user has specified minimum role
-                    message.channel.send("you don't have the permission to do that >:|");
+                if(vibeCheck() == "failed"){             // check if user has specified minimum role
+                    return;
                 } else {
                     settings[message.guild.id].shutup = true;                                       // change value of shutup
                     message.channel.send("okok I will")
@@ -120,8 +132,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "speak":   
-                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){             // check if user has specified minimum role
-                 message.channel.send("you don't have the permission to do that >:|");
+                if(vibeCheck() == "failed"){
+                    return;
                 } else {
                     settings[message.guild.id].shutup = false;                                      // change value of shutup
                     message.channel.send("I'm back!")
@@ -131,9 +143,9 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "setperm":
-                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
+                if(!message.member.hasPermission("ADMINISTRATOR")){
                     message.channel.send("You don't have the permission to do that! >:(")
-                    break;
+                    return;
                 }
                 try {
                     settings[message.guild.id].minrole = message.guild.roles.find(({name}) => name == arguments.join(" ")).id;    // automatically grabs role since that's the only argument. sketchy, yes, I'm aware
@@ -148,9 +160,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "announce":
-                if(!message.member.roles.has(`${settings[message.guild.id].minrole}`)){
-                    message.channel.send("You don't have the permission to do that! >:(")
-                    break;
+                if(vibeCheck() == "failed"){
+                    return;
                 }
                 let roleName = arguments.shift()
                 let selectRole = message.guild.roles.find(({name}) => name == roleName);            // find role
@@ -193,20 +204,23 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .addField("Role", `${roleName}`)
                     .addField("Channel", client.channels.get(`${channelID}`).name + "\n" + "ID: " + channelID)
                     .addField("Message", arguments.join(" "))
-                    .setFooter(`Command issued by ${message.member.nickname}`, client.user.avatarURL);
+                    .setFooter(`Command issued by ${(message.member.displayName)}`, client.user.avatarURL);
                 message.channel.send(announceEmbed);
                 break;
             
             case "eval":
                 if(config.admin !== message.author.id){
                     message.channel.send("__**ABSOFUCKINGLUTELY NOT**__")
-                    break;
+                    return;
                 } else {
                     let evalReturn = eval(arguments.join(" "));
                     message.channel.send(`\`\`\`${evalReturn}\`\`\``);
                     break;
                 }
             case "edit":
+                if(vibeCheck() == "failed"){
+                    return;
+                }
                 let announceMessageID = arguments.shift();
                 let announceChannelID = arguments.shift().replace(/[\\<>@#&!]/g, "");
 
