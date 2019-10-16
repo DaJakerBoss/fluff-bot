@@ -272,7 +272,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     `Platform: ${os.platform()}\n`+
                     `Type: ${os.type()}`)
                     .addField('Hardware',
-                    `CPU: ${cpu()}`+
+                    `CPU: ${cpu()}\n`+
                     `Total Memory: ${(os.totalmem().toFixed() / 1000000).toFixed()}MB\n`+
                     `Free Memory: ${(os.freemem() / 1000000).toFixed()}MB`)
                     .addField('System Uptime',
