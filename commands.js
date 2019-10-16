@@ -252,6 +252,34 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 message.channel.send(editEmbed);
                 */
                 break;
+            
+            case "info":
+                delete require.cache[require.resolve("os")];
+                let os = require("os");
+                let infoEmbed = new Discord.RichEmbed()
+                    .setAuthor('fluff bot!')
+                    .setColor('#3BCD30')
+                    .setTitle('Host Information')
+                    .addField('OS Info',
+                    `Architecture: ${os.arch()}\n`+
+                    `Platform: ${os.platform()}\n`+
+                    `Type: ${os.type()}`)
+                    .addField('Hardware',
+                    `CPU: ${os.cpus()[0].model}\n`+
+                    `Total Memory: ${(os.totalmem().toFixed() / 1000000).toFixed()}MB\n`+
+                    `Free Memory: ${(os.freemem() / 1000000).toFixed()}MB`)
+                    .addField('System Uptime',
+                    `${(os.uptime() / 86400).toFixed()} days, `+
+                    `${((os.uptime() % 86400) / 3600).toFixed()} hours, `+
+                    `${(((os.uptime() % 86400) % 3600) / 60).toFixed()} minutes, `+
+                    `${(((os.uptime() % 86400) % 3600) % 60).toFixed()} seconds.`)
+                    .addField("Bot Uptime",
+                    `${(process.uptime() / 86400).toFixed()} days, `+
+                    `${((process.uptime() % 86400) / 3600).toFixed()} hours, `+
+                    `${(((process.uptime() % 86400) % 3600) / 60).toFixed()} minutes, `+
+                    `${(((process.uptime() % 86400) % 3600) % 60).toFixed()} seconds.`);
+                message.channel.send(infoEmbed);
+                break;
 
             default:
                 message.channel.send("do what now?");
