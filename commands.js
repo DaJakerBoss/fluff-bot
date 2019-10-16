@@ -256,12 +256,13 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
             case "info":
                 delete require.cache[require.resolve("os")];
                 let os = require("os");
+                function cpu(){
                 try{        // *sigh* the CPU handler because iOS can't play nice
-                    let cpu = os.cpus()[0].model
+                    return os.cpus()[0].model
                 } catch(err) {
-                    let cpu = "[Not Declared, possibly iPhone]"
+                    return cpuID = "[Not Declared, possibly iPhone]"
                 }
-
+                }
                 let infoEmbed = new Discord.RichEmbed()
                     .setAuthor('fluff bot!')
                     .setColor('#3BCD30')
@@ -271,7 +272,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     `Platform: ${os.platform()}\n`+
                     `Type: ${os.type()}`)
                     .addField('Hardware',
-                    `CPU: ${cpu}`+
+                    `CPU: ${cpu()}`+
                     `Total Memory: ${(os.totalmem().toFixed() / 1000000).toFixed()}MB\n`+
                     `Free Memory: ${(os.freemem() / 1000000).toFixed()}MB`)
                     .addField('System Uptime',
