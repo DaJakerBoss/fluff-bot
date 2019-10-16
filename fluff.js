@@ -24,7 +24,7 @@ client.on("message", async message => {
         delete require.cache[require.resolve('./commands.js')]; // delete cached command file
 
         const { exec } = require('child_process');
-        exec('git pull', (err, stdout, stderr) => {             // run git pull
+        exec('git pull https://github.com/dajakerboss/fluff-bot.git', (err, stdout, stderr) => {    // run git pull
             if (err) {                                          // in the event of a github fuck
             message.channel.send("failed to pull from git :(")
             return;
