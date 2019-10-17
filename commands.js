@@ -92,8 +92,8 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "sayin":
-                message.channel.send("this command is currently disabled, check back soon!;")
-                /* message.delete();
+                //message.channel.send("this command is currently disabled, check back soon!;")
+                 message.delete();
                 console.log("speaking remotely");
                 const remoteChannel = client.channels.find('id', arguments.shift().replace(/[\\<>@#&!]/g, ""));
                 const remoteMessage = new Discord.RichEmbed()
@@ -103,7 +103,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .setFooter(`from ${message.member.nickname}`, message.author.avatarURL);
 
                 remoteChannel.send(remoteMessage);
-                message.channel.send("zoop"); */
+                message.channel.send("zoop"); 
                 break; 
 
             case "test":    
