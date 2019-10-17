@@ -111,6 +111,10 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 break;
 
             case "sleep":
+            case "kys":
+            case "die":
+            case "fuckoff":
+            case "bye":
                 if(message.member.id == config.admin){                                          // checks for my hard-coded ID
                     message.channel.send("goodnight!");
                     setTimeout(() => {process.exit(0);}, 1000);                                 // waits to exit so it doesn't asynchroniously kill itself before it talks
