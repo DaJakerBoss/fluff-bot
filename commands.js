@@ -302,6 +302,23 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 message.channel.send(infoEmbed);
                 break;
 
+            case "setpinboard":
+                if(vibeCheck() == "failed"){return};
+                let reaction = arguments.shift();
+                let reactCount = arguments.shift();
+                let pbChannel = arguments.shift().replace(/[\\<>@#&!]/g, "");
+
+                if(reactCount.isNaN()){
+                    message.channel.send("invalid syntax!");
+                    return;
+                }
+
+                settings[message.guild.id].reactEmote = reaction;
+                settings[message.guild.id].pinChannel = pbchannel;
+                settings[message.guild.id].reactionCount = reactCount;
+                fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));
+                message.channel.send("reaction and channel set");
+
             default:
                 message.channel.send("do what now?");
                 console.log("invalid command recieved");
