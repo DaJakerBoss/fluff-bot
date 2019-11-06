@@ -25,7 +25,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
     if(message.content.toLowerCase().includes("awoo")){
         if(settings[message.guild.id].shutup){                                                              // check for shut
             return;
-        } else { 
+        } else {
         message.channel.send("Stowp wight thewe cwiminaw scum, pay the couwt a fine ow sewve youw sentence, youw stowen goods awe now fowfeit");
         }
     }
@@ -40,13 +40,13 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
         /* command switch, prettier until I modularize */
         switch(command){
             case "help":
-                const helpEmbed = new Discord.RichEmbed()       // uses a fancy-ass discord embed now 
+                const helpEmbed = new Discord.RichEmbed()       // uses a fancy-ass discord embed now
                     .setAuthor('fluff bot!')
                     .setColor('#3BCD30')
                     .setTitle("Help Menu")
                     .setDescription(`prefix: \`${config.prefix}\``)
                     .setThumbnail('https://cdn.discordapp.com/avatars/630909646579695628/984f9b9a3becb50087387b7b1c187104.png?')
-                    .addField('Global Commands:', 
+                    .addField('Global Commands:',
                     "`hello` :: returns a friendly identification\n"+
                     "`returnid` :: returns guild ID\n"+
                     "`say` :: repeat a message\n"+
@@ -78,7 +78,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 message.channel.send(helpEmbed);
                 break;
 
-            case "hello":   
+            case "hello":
                 message.channel.send("Hi I'm Fluff Bot! The android sent by CyberLife!");                                           // self-explanatory
                 break;
 
@@ -86,7 +86,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 message.channel.send(message.guild.id);                                         // currently returns guildid
                 break;
 
-            case "say":     
+            case "say":
                 console.log("speaking a message");
                 message.channel.send(arguments.join(" "));                                      // joins message and sends
                 break;
@@ -103,10 +103,10 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .setFooter(`from ${message.member.nickname}`, message.author.avatarURL);
 
                 remoteChannel.send(remoteMessage);
-                message.channel.send("zoop"); 
-                break; 
+                message.channel.send("zoop");
+                break;
 
-            case "test":    
+            case "test":
                 message.channel.send("you bet your ass it fucking works!");                     // this will mean something, eventually
                 break;
 
@@ -124,7 +124,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 }
                 break;
 
-            case "shutup":  
+            case "shutup":
                 if(vibeCheck() == "failed"){             // check if user has specified minimum role
                     return;
                 } else {
@@ -135,7 +135,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 }
                 break;
 
-            case "speak":   
+            case "speak":
                 if(vibeCheck() == "failed"){
                     return;
                 } else {
@@ -169,7 +169,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 }
                 let roleName = arguments.shift()
                 let selectRole = message.guild.roles.find(({name}) => name == roleName);            // find role
-                
+
                 while(!selectRole){                                                                 // if that fucks up then do this
                     roleName = roleName + " " + arguments.shift()
                     selectRole = message.guild.roles.find(({name}) => name == roleName);
@@ -199,9 +199,9 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                         }
                     ))
                     .then(                                                                          // then set back to unmentionable
-                        selectRole.edit({mentionable : false})                                      
+                        selectRole.edit({mentionable : false})
                     );
-                
+
                 let announceEmbed = new Discord.RichEmbed()                                         // Embed message to be sent to command channel
                     .setAuthor('fluff bot!')
                     .setColor('#3BCD30')
@@ -212,7 +212,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     .setFooter(`Command issued by ${(message.member.displayName)}`, client.user.avatarURL);
                 message.channel.send(announceEmbed);
                 break;
-            
+
             case "eval":
                 if(config.admin !== message.author.id){
                     message.channel.send("__**ABSOFUCKINGLUTELY NOT**__")
@@ -249,7 +249,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                             editMessage.mentions.roles.first().edit({mentionable : true})                   // set role ping to true to ensure role stays pinged
                             .then(editMessage.edit(`${editMessage.mentions.roles.first()}: ` + arguments.join(" ")))    // edit content
                             .then(editMessage.mentions.roles.first().edit({mentionable : false}))           // set role to unpingable
-                            
+
                             const editEmbed = new Discord.RichEmbed()                                       // fluff's rich embed
                                 .setAuthor('fluff bot!')
                                 .setColor('#3BCD30')
@@ -262,28 +262,19 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 } catch(err) {
                     message.channel.send("Can't edit that message! Do I have permissions?")
                 }
-                /*
-                const editEmbed = new Discord.RichEmbed()
-                    .setAuthor('fluff bot!')
-                    .setColor('#3BCD30')
-                    .setTitle('Edited Announcement')
-                    .addField('Original', originalMessage)
-                    .addField('Edit', arguments.join(" "))
-                    .setFooter(`Command issued by ${message.member.nickname}`, client.user.avatarURL);
-                message.channel.send(editEmbed);
-                */
                 break;
-            
+
             case "info":
                 delete require.cache[require.resolve("os")];
                 let os = require("os");
                 function cpu(){
-                try{        // *sigh* the CPU handler because iOS can't play nice
-                    return os.cpus()[0].model
-                } catch(err) {
-                    return cpuID = "[Not Declared, possibly iPhone]"
+                    try{        // *sigh* the CPU handler because iOS can't play nice
+                        return os.cpus()[0].model
+                    } catch(err) {
+                        return cpuID = "[Not Declared, possibly iPhone]"
+                    }
                 }
-                }
+
                 let infoEmbed = new Discord.RichEmbed()
                     .setAuthor('fluff bot!')
                     .setColor('#3BCD30')
@@ -314,5 +305,5 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 console.log("invalid command recieved");
 
         }
-    } 
+    }
 }

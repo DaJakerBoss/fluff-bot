@@ -56,7 +56,6 @@ client.on("message", async message => {
         }
         commands.run(client, message, config, fs, Discord);      // the world's shittiest command handler :)
     }
-    
 })
 
 client.login(config.token);     // Login
