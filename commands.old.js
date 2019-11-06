@@ -170,7 +170,7 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 let roleName = arguments.shift()
                 let selectRole = message.guild.roles.find(({name}) => name == roleName);            // find role
                 
-                while(!selectRole){                                                                 // if that fucks up then do this
+                while(!selectRole){
                     roleName = roleName + " " + arguments.shift()
                     selectRole = message.guild.roles.find(({name}) => name == roleName);
                     if(arguments.length == 0){
@@ -180,29 +180,28 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 }
 
                 let channelID = arguments.shift().replace(/[\\<>@#&!]/g, "")                        // second arg is channel ID
-                if (!client.channels.get(`${channelID}`)) {                                         // catch lack of existence
-                    message.channel.send("Channel not found! Are permissions set?");
-                    return;
+
+                try {
+                    selectRole.edit({mentionable : true});                                          // ping pong
+                } catch(err) {
+                    message.channel.send("Failed to change role permissions!");
+                    console.log("err");
+                    break;
                 }
 
-                /* The following tests using `then` statements for consistency in timings */
-                selectRole.edit({mentionable : true})                                               // set to mentionable
-                    .catch(() => {                                                                  // catch failure on change
-                        message.channel.send("Failed to change role permissions!");
-                        console.log("error")
-                        return;
-                    })                                                                              // next we send the message
-                    .then(client.channels.get(`${channelID}`).send(selectRole + ": " + arguments.join(" "))
-                        .catch(() => {                                                              // catch failure on send
-                            message.channel.send("Failed to send message!");
-                            return;
-                        }
-                    ))
-                    .then(                                                                          // then set back to unmentionable
-                        selectRole.edit({mentionable : false})                                      
-                    );
+                if (!client.channels.get(`${channelID}`)){
+                    message.channel.send("Channel not found! Are permissions set?")
+                } else {
+                    try{
+                        client.channels.get(`${channelID}`).send(selectRole + ": " + arguments.join(" "));      // send message
+                    } catch(err) {
+                        message.channel.send("failed to send the message!");
+                        break;
+                    } 
+                }
                 
-                let announceEmbed = new Discord.RichEmbed()                                         // Embed message to be sent to command channel
+                setTimeout(() => {selectRole.edit({mentionable : false})}, 500);                    // fuck ping pong
+                let announceEmbed = new Discord.RichEmbed()
                     .setAuthor('fluff bot!')
                     .setColor('#3BCD30')
                     .setTitle("Announcement Sent!")
@@ -226,35 +225,33 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                 if(vibeCheck() == "failed"){
                     return;
                 }
-                let announceMessageID = arguments.shift();                                                  // first argument is message ID
-                let announceChannelID = arguments.shift().replace(/[\\<>@#&!]/g, "");                       // second argument is channel ID (can be stripped via mention)
+                let announceMessageID = arguments.shift();
+                let announceChannelID = arguments.shift().replace(/[\\<>@#&!]/g, "");
 
-                if(!message.guild.channels.get(`${announceChannelID}`)){                                    // if channel not found
+                if(!message.guild.channels.get(`${announceChannelID}`)){
                     message.channel.send("channel not found!");
                 }
-                if (!message.guild.channels.get(`${announceChannelID}`).fetchMessage(announceMessageID)){   // if message not found by ID
+                if (!message.guild.channels.get(`${announceChannelID}`).fetchMessage(announceMessageID)){
                     message.channel.send("Can't find the message!")
                 }
 
-                try{                                                                                        // for some fucking reason I thought this was a good idea
-                    message.guild.channels.get(`${announceChannelID}`).fetchMessage(announceMessageID)      // fetch message by ID
-                        .then(editMessage => {                                                              // forward message on
-                            if(!editMessage.mentions.roles.first()){                                        // check if there's a mention before proceeding
+                try{
+                    message.guild.channels.get(`${announceChannelID}`).fetchMessage(announceMessageID)
+                        .then(editMessage => {
+                            if(!editMessage.mentions.roles.first()){
                                 message.channel.send("No role pinged... is this an announcement?")
                                 message.channel.send(editMessage.mentions.roles.first())
                                 return;
                             }
-
-                            let originalMessage = editMessage                                               // attempt to get original content of message
-                            editMessage.mentions.roles.first().edit({mentionable : true})                   // set role ping to true to ensure role stays pinged
-                            .then(editMessage.edit(`${editMessage.mentions.roles.first()}: ` + arguments.join(" ")))    // edit content
-                            .then(editMessage.mentions.roles.first().edit({mentionable : false}))           // set role to unpingable
-                            
-                            const editEmbed = new Discord.RichEmbed()                                       // fluff's rich embed
+                            let originalMessage = editMessage.content
+                            editMessage.mentions.roles.first().edit({mentionable : true});
+                            editMessage.edit(`${editMessage.mentions.roles.first()}: ` + arguments.join(" "));
+                            setTimeout(() => {editMessage.mentions.roles.first().edit({mentionable : false})}, 500);
+                            const editEmbed = new Discord.RichEmbed()
                                 .setAuthor('fluff bot!')
                                 .setColor('#3BCD30')
                                 .setTitle('Edited Announcement')
-                                .addField('Original', originalMessage.content.trim(originalMessage.content.split(/ +/g)[0].length))
+                                .addField('Original', originalMessage)
                                 .addField('Edit', arguments.join(" "))
                                 .setFooter(`Command issued by ${message.member.nickname}`, client.user.avatarURL);
                             message.channel.send(editEmbed);
@@ -308,7 +305,24 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     `${(((process.uptime() % 86400) % 3600) % 60).toFixed()} seconds.`);
                 message.channel.send(infoEmbed);
                 break;
+/*
+            case "setpinboard":
+                if(vibeCheck() == "failed"){return};
+                let reaction = arguments.shift();
+                let reactCount = arguments.shift();
+                let pbChannel = arguments.shift().replace(/[\\<>@#&!]/g, "");
 
+                if(reactCount.isNaN()){
+                    message.channel.send("invalid syntax!");
+                    return;
+                }
+
+                settings[message.guild.id].reactEmote = reaction;
+                settings[message.guild.id].pinChannel = pbchannel;
+                settings[message.guild.id].reactionCount = reactCount;
+                fs.writeFileSync('./serversettings.json', JSON.stringify(settings, null, 4));
+                message.channel.send("reaction and channel set");
+*/
             default:
                 message.channel.send("do what now?");
                 console.log("invalid command recieved");

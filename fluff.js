@@ -15,12 +15,13 @@ client.on("ready", () => {
     console.log("Bot is up");
     client.user.setActivity("jake, why")
 });
-
+/*
 client.on("messageReactionAdd", async messageReaction => {
     console.log("reaction detected")
     let pinboard = require("./pinboard.js");
     pinboard.run(client, messageReaction, config, fs, Discord);
 })
+*/
 
 /* actions on message */
 client.on("message", async message => {
