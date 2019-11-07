@@ -299,7 +299,28 @@ let settings = JSON.parse(fs.readFileSync('./serversettings.json'));    // load 
                     `${(((process.uptime() % 86400) % 3600) % 60).toFixed()} seconds.`);
                 message.channel.send(infoEmbed);
                 break;
-
+                
+            case "penis":
+                var emoji = arguments[0] + " ";
+                if (emoji == " ") emoji = "<a:uwucat:640751589388451840> ";
+                
+                message.channel.send(`
+${emoji} ${emoji} 
+${emoji} ${emoji} ${emoji} 
+  ${emoji} ${emoji} ${emoji} 
+    ${emoji} ${emoji} ${emoji} 
+     ${emoji} ${emoji} ${emoji} 
+       ${emoji} ${emoji} ${emoji} 
+        ${emoji} ${emoji} ${emoji} 
+         ${emoji} ${emoji} ${emoji} 
+          ${emoji} ${emoji} ${emoji} 
+          ${emoji} ${emoji} ${emoji} 
+      ${emoji} ${emoji} ${emoji} ${emoji} 
+ ${emoji} ${emoji} ${emoji} ${emoji} ${emoji} ${emoji} 
+ ${emoji} ${emoji} ${emoji}   ${emoji} ${emoji} ${emoji} 
+    ${emoji} ${emoji}        ${emoji} ${emoji} `);
+                break;
+                
             default:
                 message.channel.send("do what now?");
                 console.log("invalid command recieved");
