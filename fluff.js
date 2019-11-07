@@ -25,7 +25,7 @@ client.on("messageReactionAdd", async messageReaction => {
 
 /* actions on message */
 client.on("message", async message => {
-    // if(message.author.bot) return;                              // do not interact with a bot
+    if(message.author.bot) return;                              // do not interact with a bot
 
     if(message.content.includes(config.prefix + " reload")){    // look for the reload command explicitly
         delete require.cache[require.resolve('./commands.js')]; // delete cached command file
