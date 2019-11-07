@@ -13,7 +13,7 @@ const   Discord = require("discord.js"),            // Discord API
 /* console feedback for bot ready */
 client.on("ready", () => {
     console.log("Bot is up");
-    client.user.setActivity("jake, why")
+    client.user.setActivity("can robots yiff?")
 });
 /*
 client.on("messageReactionAdd", async messageReaction => {
