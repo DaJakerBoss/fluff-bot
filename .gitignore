@@ -1,3 +1,4 @@
 # HIDES BOT TOKEN # 
 config.json
-serversettings.json
+# HIDE THAT ANNOYING ASS FOLDER #
+node_modules
